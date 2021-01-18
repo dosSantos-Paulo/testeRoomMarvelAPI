@@ -1,5 +1,6 @@
 package com.devdossantos.roomtest.view
 
+import android.annotation.SuppressLint
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.widget.TextView
@@ -27,6 +28,7 @@ class CardActivity : AppCompatActivity() {
 
     }
 
+    @SuppressLint("SetTextI18n")
     private fun getAllCardsFromDB(cardManager: MutableList<Hero>) {
         val databaseViewModel = ViewModelProvider(
             this,
@@ -56,12 +58,15 @@ class CardActivity : AppCompatActivity() {
                     )
                 )
             }
-            val list = sort5(cardManager)
-            findViewById<TextView>(R.id.txt1).text = list[0].classification.toString()
-            findViewById<TextView>(R.id.txt2).text = list[1].classification.toString()
-            findViewById<TextView>(R.id.txt3).text = list[2].classification.toString()
-            findViewById<TextView>(R.id.txt4).text = list[3].classification.toString()
-            findViewById<TextView>(R.id.txt5).text = list[4].classification.toString()
+//            val list = sort5(cardManager)
+
+            val list = sort3(cardManager)
+            findViewById<TextView>(R.id.txt1).text =
+                "${list[0].heroName} : ${list[0].classification}"
+            findViewById<TextView>(R.id.txt2).text =
+                "${list[1].heroName} : ${list[1].classification}"
+            findViewById<TextView>(R.id.txt3).text =
+                "${list[2].heroName} : ${list[2].classification}"
         }
 
     }
@@ -86,18 +91,60 @@ class CardActivity : AppCompatActivity() {
                 diamondCards.add(it)
             }
         }
+
         for (i in 1..3) {
-            list.add(bronzeCards.random())
+
+            var validator: Boolean
+            var card: Hero
+
+            do {
+
+                validator = true
+
+                card = bronzeCards.random()
+                list.forEach {
+                    if (card.id == it.id) {
+                        validator = false
+                    }
+                }
+
+            } while (!validator)
+
+            list.add(card)
+
         }
+
         for (i in 1..2) {
-            list.add(silverCards.random())
+
+            var validator: Boolean
+            var card: Hero
+
+            do {
+
+                validator = true
+
+                card = silverCards.random()
+                list.forEach {
+                    if (card.id == it.id) {
+                        validator = false
+                    }
+                }
+
+            } while (!validator)
+
+            list.add(card)
         }
+
         list.add(goldCards.random())
 
         return list
+
     }
 
-    private fun sort3(cardManager: MutableList<Hero>) {
+    private fun sort3(cardManager: MutableList<Hero>): MutableList<Hero> {
+        val listOf3: MutableList<Hero> = mutableListOf()
+        val list: MutableList<Hero> = mutableListOf()
+
         val bronzeCards: MutableList<Hero> = mutableListOf()
         val silverCards: MutableList<Hero> = mutableListOf()
         val goldCards: MutableList<Hero> = mutableListOf()
@@ -115,6 +162,41 @@ class CardActivity : AppCompatActivity() {
                 diamondCards.add(it)
             }
         }
+
+        for (i in 1..4) {
+            list.add(bronzeCards.random())
+        }
+        for (i in 1..3) {
+            list.add(silverCards.random())
+        }
+        for (i in 1..2) {
+            list.add(goldCards.random())
+        }
+        list.add(diamondCards.random())
+
+        for (i in 1..3) {
+
+            var validator: Boolean
+            var card: Hero
+
+            do {
+
+                validator = true
+
+                card = list.random()
+                listOf3.forEach {
+                    if (card.id == it.id) {
+                        validator = false
+                    }
+                }
+
+            } while (!validator)
+
+            listOf3.add(card)
+        }
+
+        return listOf3
+
     }
 
     private fun getCardFromDB(idList: List<Int>) {
