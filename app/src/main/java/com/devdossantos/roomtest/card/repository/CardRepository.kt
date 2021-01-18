@@ -9,4 +9,6 @@ class CardRepository(private val cardDao: CardDao) {
 
     suspend fun count () = cardDao.count()
 
+    suspend fun getCard(id: Int) = cardDao.getCard(id)
+
 }

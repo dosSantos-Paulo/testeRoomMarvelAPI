@@ -8,14 +8,14 @@ import com.devdossantos.roomtest.card.entity.CardEntity
 import com.devdossantos.roomtest.card.repository.CardRepository
 import kotlinx.coroutines.Dispatchers
 
-class CardViewModel(private val repository: CardRepository):ViewModel() {
+class CardViewModel(private val repository: CardRepository) : ViewModel() {
 
     fun addCard(card: CardEntity) = liveData(Dispatchers.IO) {
-        try{
+        try {
             repository.addCard(card)
             emit(true)
         } catch (ex: Exception) {
-            println("Error when inserting object in the database")
+            println("Error when inserting object from database")
             println("erro: ${ex.message}")
             Log.e("DB_ERROR:", ex.message.toString())
             emit(false)
@@ -27,15 +27,27 @@ class CardViewModel(private val repository: CardRepository):ViewModel() {
         try {
             val count = repository.count()
             emit(count.toInt())
-        } catch (ex: Exception){
-            println("Error when count object in the database")
+        } catch (ex: Exception) {
+            println("Error when count object from database")
             println("erro: ${ex.message}")
             Log.e("DB_ERROR:", ex.message.toString())
             emit(false)
         }
     }
 
-    class CardViewModelFactory(private val repository: CardRepository): ViewModelProvider.Factory {
+    fun getCard(id: Int) = liveData(Dispatchers.IO) {
+        try {
+            val card = repository.getCard(id)
+            emit(card)
+        } catch (ex: Exception) {
+            println("Error when getting object from database")
+            println("erro: ${ex.message}")
+            Log.e("DB_ERROR:", ex.message.toString())
+            emit(false)
+        }
+    }
+
+    class CardViewModelFactory(private val repository: CardRepository) : ViewModelProvider.Factory {
         override fun <T : ViewModel?> create(modelClass: Class<T>): T {
             return CardViewModel(repository) as T
         }

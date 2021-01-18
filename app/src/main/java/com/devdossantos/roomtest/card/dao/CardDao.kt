@@ -14,4 +14,7 @@ interface CardDao {
     @Query("SELECT COUNT(*) FROM Card")
     suspend fun count(): Int
 
+    @Query("SELECT * FROM Card WHERE id = :id")
+    suspend fun getCard(id: Int): CardEntity
+
 }

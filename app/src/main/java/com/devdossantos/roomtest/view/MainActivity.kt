@@ -1,5 +1,6 @@
 package com.devdossantos.roomtest.view
 
+import android.content.Intent
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.util.Log
@@ -41,7 +42,8 @@ class MainActivity : AppCompatActivity() {
         databaseViewModel.count().observe(this) {
             val count = it.toString().toInt()
             if (count == allCharId.size) {
-                Toast.makeText(this@MainActivity, "acertouuu", Toast.LENGTH_LONG).show()
+                val intent = Intent(this@MainActivity, CardActivity::class.java)
+                startActivity(intent)
             } else {
                 charViewModel(allCharId, cardUtils)
             }
