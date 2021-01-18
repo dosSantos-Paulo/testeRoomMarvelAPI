@@ -17,4 +17,7 @@ interface CardDao {
     @Query("SELECT * FROM Card WHERE id = :id")
     suspend fun getCard(id: Int): CardEntity
 
+    @Query("SELECT * FROM Card")
+    suspend fun getAllCards(): List<CardEntity>
+
 }
