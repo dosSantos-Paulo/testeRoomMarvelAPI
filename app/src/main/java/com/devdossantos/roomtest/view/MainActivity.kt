@@ -3,7 +3,7 @@ package com.devdossantos.roomtest.view
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.util.Log
-import android.widget.TextView
+import android.widget.Toast
 import androidx.lifecycle.ViewModelProvider
 import com.devdossantos.roomtest.R
 import com.devdossantos.roomtest.api.CharacterRepository
@@ -13,7 +13,6 @@ import com.devdossantos.roomtest.card.viewmodel.CardViewModel
 import com.devdossantos.roomtest.database.AppDataBase
 import com.devdossantos.roomtest.utils.CardUtils
 import com.devdossantos.roomtest.viewmodel.CharacterViewModel
-import kotlinx.android.synthetic.main.activity_main.view.*
 
 class MainActivity : AppCompatActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -24,13 +23,32 @@ class MainActivity : AppCompatActivity() {
 
         val cardUtils = CardUtils()
 
-        charViewModel(allCharId, cardUtils)
-
+       dbCount(allCharId, cardUtils)
 
 
     }
 
-    private fun charViewModel(allCharId: List<Int>, utils: CardUtils){
+    private fun dbCount(allCharId: List<Int>, cardUtils: CardUtils) {
+        val databaseViewModel = ViewModelProvider(
+            this,
+            CardViewModel.CardViewModelFactory(
+                CardRepository(
+                    AppDataBase.getDatabase(this).cardDao()
+                )
+            )
+        ).get(CardViewModel::class.java)
+
+        databaseViewModel.count().observe(this) {
+            val count = it.toString().toInt()
+            if (count == allCharId.size) {
+                Toast.makeText(this@MainActivity, "acertouuu", Toast.LENGTH_LONG).show()
+            } else {
+                charViewModel(allCharId, cardUtils)
+            }
+        }
+    }
+
+    private fun charViewModel(allCharId: List<Int>, utils: CardUtils) {
 
         val characterViewModel = ViewModelProvider(
             this,
@@ -55,9 +73,9 @@ class MainActivity : AppCompatActivity() {
         ).get(CardViewModel::class.java)
 
         cardList.forEach {
-                  databaseViewModel.addCard(it).observe(this) {
-                      Log.i("DB_INSERT", "$it")
-                  }
+            databaseViewModel.addCard(it).observe(this) {
+                Log.i("DB_INSERT", "$it")
+            }
         }
 
 

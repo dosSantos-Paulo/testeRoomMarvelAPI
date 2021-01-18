@@ -17,10 +17,22 @@ class CardViewModel(private val repository: CardRepository):ViewModel() {
         } catch (ex: Exception) {
             println("Error when inserting object in the database")
             println("erro: ${ex.message}")
-            Log.e("DB_IMPUT_ERROR:", ex.message.toString())
+            Log.e("DB_ERROR:", ex.message.toString())
             emit(false)
         }
 
+    }
+
+    fun count() = liveData(Dispatchers.IO) {
+        try {
+            val count = repository.count()
+            emit(count.toInt())
+        } catch (ex: Exception){
+            println("Error when count object in the database")
+            println("erro: ${ex.message}")
+            Log.e("DB_ERROR:", ex.message.toString())
+            emit(false)
+        }
     }
 
     class CardViewModelFactory(private val repository: CardRepository): ViewModelProvider.Factory {
