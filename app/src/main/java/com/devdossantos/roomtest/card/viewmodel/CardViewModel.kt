@@ -1,5 +1,6 @@
 package com.devdossantos.roomtest.card.viewmodel
 
+import android.util.Log
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.liveData
@@ -10,8 +11,16 @@ import kotlinx.coroutines.Dispatchers
 class CardViewModel(private val repository: CardRepository):ViewModel() {
 
     fun addCard(card: CardEntity) = liveData(Dispatchers.IO) {
-        repository.addCard(card)
-        emit(true)
+        try{
+            repository.addCard(card)
+            emit(true)
+        } catch (ex: Exception) {
+            println("Error when inserting object in the database")
+            println("erro: ${ex.message}")
+            Log.e("DB_IMPUT_ERROR:", ex.message.toString())
+            emit(false)
+        }
+
     }
 
     class CardViewModelFactory(private val repository: CardRepository): ViewModelProvider.Factory {
